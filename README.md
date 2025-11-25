@@ -1,7 +1,7 @@
 # Full Stack AI Fianace Platform with Next JS, Supabase,Inngest, ArcJet, Shadcn UI Tutorial , Tailwind, Prisma
 ## https://youtu.be/egS6fnZAdzk
 
-<img width="1470" alt="Screenshot 2024-12-10 at 9 45 45 AM" src="C:\Users\lenovo\ai-finance-platform-main\public\hero1.jpg">
+<img width="1470" alt="Screenshot 2024-12-10 at 9 45 45 AM" src="public/hero1.jpg">
 
 ### Make sure to create a `.env` file with following variables -
 
