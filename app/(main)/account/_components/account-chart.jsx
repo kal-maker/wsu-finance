@@ -20,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { useCurrency } from "@/context/currency-context";
 
 const DATE_RANGES = {
   "7D": { label: "Last 7 Days", days: 7 },
@@ -31,6 +33,7 @@ const DATE_RANGES = {
 
 export function AccountChart({ transactions }) {
   const [dateRange, setDateRange] = useState("1M");
+  const { fmt } = useCurrency();
 
   const filteredData = useMemo(() => {
     const range = DATE_RANGES[dateRange];
@@ -75,19 +78,35 @@ export function AccountChart({ transactions }) {
     );
   }, [filteredData]);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white/95 backdrop-blur-sm border border-cyan-200 rounded-lg p-3 shadow-lg">
+          <p className="font-semibold text-navy-800">{label}</p>
+          {payload.map((entry, index) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {entry.name}: {fmt(entry.value)}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <Card>
+    <Card className="bg-white/80 backdrop-blur-sm border border-cyan-200 shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
-        <CardTitle className="text-base font-normal">
+        <CardTitle className="text-base font-semibold bg-gradient-to-r from-cyan-600 to-navy-600 bg-clip-text text-transparent">
           Transaction Overview
         </CardTitle>
         <Select defaultValue={dateRange} onValueChange={setDateRange}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[140px] border-cyan-200 focus:ring-cyan-500 focus:border-cyan-500">
             <SelectValue placeholder="Select range" />
           </SelectTrigger>
           <SelectContent>
             {Object.entries(DATE_RANGES).map(([key, { label }]) => (
-              <SelectItem key={key} value={key}>
+              <SelectItem key={key} value={key} className="text-navy-700">
                 {label}
               </SelectItem>
             ))}
@@ -97,27 +116,28 @@ export function AccountChart({ transactions }) {
       <CardContent>
         <div className="flex justify-around mb-6 text-sm">
           <div className="text-center">
-            <p className="text-muted-foreground">Total Income</p>
-            <p className="text-lg font-bold text-green-500">
-              ${totals.income.toFixed(2)}
+            <p className="text-navy-600">Total Income</p>
+            <p className="text-lg font-bold text-cyan-600">
+              {fmt(totals.income)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-muted-foreground">Total Expenses</p>
-            <p className="text-lg font-bold text-red-500">
-              ${totals.expense.toFixed(2)}
+            <p className="text-navy-600">Total Expenses</p>
+            <p className="text-lg font-bold text-navy-600">
+              {fmt(totals.expense)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-muted-foreground">Net</p>
+            <p className="text-navy-600">Net</p>
             <p
-              className={`text-lg font-bold ${
+              className={cn(
+                "text-lg font-bold",
                 totals.income - totals.expense >= 0
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}
+                  ? "text-cyan-600"
+                  : "text-navy-600"
+              )}
             >
-              ${(totals.income - totals.expense).toFixed(2)}
+              {fmt(totals.income - totals.expense)}
             </p>
           </div>
         </div>
@@ -127,38 +147,36 @@ export function AccountChart({ transactions }) {
               data={filteredData}
               margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f9ff" />
               <XAxis
                 dataKey="date"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
+                tick={{ fill: '#64748b' }}
               />
               <YAxis
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `$${value}`}
+                tickFormatter={(value) => fmt(value)}
+                tick={{ fill: '#64748b' }}
               />
               <Tooltip
-                formatter={(value) => [`$${value}`, undefined]}
-                contentStyle={{
-                  backgroundColor: "hsl(var(--popover))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "var(--radius)",
-                }}
+                content={<CustomTooltip />}
+                cursor={{ fill: 'rgba(6, 182, 212, 0.1)' }}
               />
               <Legend />
               <Bar
                 dataKey="income"
                 name="Income"
-                fill="#22c55e"
+                fill="#06B6D4" // cyan-500
                 radius={[4, 4, 0, 0]}
               />
               <Bar
                 dataKey="expense"
                 name="Expense"
-                fill="#ef4444"
+                fill="#0C4A6E" // navy-900
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>

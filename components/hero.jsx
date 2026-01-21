@@ -1,152 +1,121 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import {
-  featuresData,
-  howItWorksData,
-  testimonialsData,
-} from "@/data/landing";
-import HeroSection from "@/components/hero";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
-const LandingPage = () => {
-  const featureHighlights = [
-    { icon: "🤖", title: "AI Powered", desc: "Smart categorization & insights" },
-    { icon: "📊", title: "Real-time Analytics", desc: "Live budget tracking" },
-    { icon: "🔒", title: "Secure & Private", desc: "Bank-level encryption" }
-  ];
+const HeroSection = () => {
+  const [currentWord, setCurrentWord] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const rotatingWords = ["Intelligence", "AI", "Ease", "Confidence"];
+
+  useEffect(() => {
+    // Word rotation effect
+    const wordInterval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % rotatingWords.length);
+    }, 2000);
+
+    // Fade in animation
+    setIsVisible(true);
+
+    return () => {
+      clearInterval(wordInterval);
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <HeroSection />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/hero1.jpg')",
+        }}
+      >
+        {/* Dark gradient overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-navy-900/90 to-teal-900/80"></div>
 
-      {/* Feature Highlights Section */}
-      <section className="py-20 bg-gradient-to-br from-navy-900 to-teal-900">
-        <div className="container mx-auto px-4">
-          <motion.div
+        {/* Subtle animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-aqua-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-turquoise-500/5 rounded-full blur-2xl animate-pulse delay-500"></div>
+        </div>
+      </div>
+
+      <div className="w-full px-4 sm:px-8 lg:px-12 text-center relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl pb-6 font-bold leading-tight text-white">
+            Manage Your Finances <br />
+            with{" "}
+            <span className="relative inline-block">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={currentWord}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-gradient-to-r from-cyan-400 to-aqua-500 bg-clip-text text-transparent"
+                >
+                  {rotatingWords[currentWord]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </h1>
+
+          <motion.p
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            {featureHighlights.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 hover:transform hover:scale-105"
+
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 40 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
+          >
+            <Link href="/dashboard">
+              <Button
+                size="lg"
+                className="px-8 py-3 text-lg bg-gradient-to-r from-cyan-500 to-aqua-600 hover:from-cyan-600 hover:to-aqua-700 border-0 text-white transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/25"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-cyan-300 font-semibold text-xl mb-3">{feature.title}</h3>
-                <p className="text-gray-300 text-base">{feature.desc}</p>
-              </motion.div>
-            ))}
+                Get Started
+              </Button>
+            </Link>
           </motion.div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* Rest of your component remains the same... */}
-      {/* Features Section */}
-      <section id="features" className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Everything you need to manage your finances
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuresData.map((feature, index) => (
-              <Card className="p-6" key={index}>
-                <CardContent className="space-y-4 pt-4">
-                  {feature.icon}
-                  <h3 className="text-xl font-semibold">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+        {/* Feature Highlights */}
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{ duration: 1, delay: 1.5 }}
+          className="mt-16 flex flex-col items-center"
+        >
+          <span className="text-cyan-300 text-sm mb-2">Scroll to explore</span>
+          <div className="w-6 h-10 border-2 border-cyan-400/50 rounded-full flex justify-center">
+            <motion.div
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-1 h-3 bg-cyan-400 rounded-full mt-2"
+            />
           </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="py-20 bg-blue-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-16">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {howItWorksData.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  {step.icon}
-                </div>
-                <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-16">
-            What Our Users Say
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonialsData.map((testimonial, index) => (
-              <Card key={index} className="p-6">
-                <CardContent className="pt-4">
-                  <div className="flex items-center mb-4">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                    <div className="ml-4">
-                      <div className="font-semibold">{testimonial.name}</div>
-                      <div className="text-sm text-gray-600">
-                        {testimonial.role}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-600">{testimonial.quote}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-cyan-600 to-aqua-600">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Take Control of Your Finances?
-          </h2>
-          <p className="text-cyan-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of users who are already managing their finances
-            smarter with our platform
-          </p>
-          <Link href="/dashboard">
-            <Button
-              size="lg"
-              className="bg-white text-cyan-600 hover:bg-cyan-50 px-8 py-3 text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-            >
-              Start Free Trial
-            </Button>
-          </Link>
-        </div>
-      </section>
-    </div>
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
-export default LandingPage;
+export default HeroSection;

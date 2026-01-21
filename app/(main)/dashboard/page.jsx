@@ -1,4 +1,5 @@
-import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { checkUser } from "@/lib/checkUser";
 import { getUserAccounts } from "@/actions/dashboard";
 import { getDashboardData } from "@/actions/dashboard";
 import { getCurrentBudget } from "@/actions/budget";
@@ -10,6 +11,12 @@ import { Plus } from "lucide-react";
 import { DashboardOverview } from "./_components/transaction-overview";
 
 export default async function DashboardPage() {
+  const user = await checkUser();
+
+  if (user?.role === 'admin') {
+    redirect("/admin");
+  }
+
   const [accounts, transactions] = await Promise.all([
     getUserAccounts(),
     getDashboardData(),

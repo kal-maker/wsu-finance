@@ -1,0 +1,34 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color gray_bg
+color purple_200
+color purple_500
+color purple_700
+color teal_200
+color teal_700
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id action_logout
+id progressBar
+id tvAmount
+id tvCategory
+id tvDate
+id tvDescription
+id webview
+layout activity_login
+layout item_transaction
+menu main_menu
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+string balance_label
+string dashboard_title
+string loading
+string login_button
+string recent_transactions
+string welcome
+style Theme.WSUFinance
+xml backup_rules
+xml data_extraction_rules

@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.example.wsu_finance.app-mergeDebugResources-31:/layout/activity_login.xml",
+        "source": "com.example.wsu_finance.app-main-34:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.example.wsu_finance.app-mergeDebugResources-31:/layout/item_transaction.xml",
+        "source": "com.example.wsu_finance.app-main-34:/layout/item_transaction.xml"
+    }
+]

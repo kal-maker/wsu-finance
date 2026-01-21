@@ -84,7 +84,7 @@ export function CreateAccountDrawer({ children }) {
             <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-semibold text-navy-700"
               >
                 Account Name
               </label>
@@ -101,7 +101,7 @@ export function CreateAccountDrawer({ children }) {
             <div className="space-y-2">
               <label
                 htmlFor="type"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-semibold text-navy-700"
               >
                 Account Type
               </label>
@@ -125,7 +125,7 @@ export function CreateAccountDrawer({ children }) {
             <div className="space-y-2">
               <label
                 htmlFor="balance"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm font-semibold text-navy-700"
               >
                 Initial Balance
               </label>
@@ -145,7 +145,7 @@ export function CreateAccountDrawer({ children }) {
               <div className="space-y-0.5">
                 <label
                   htmlFor="isDefault"
-                  className="text-base font-medium cursor-pointer"
+                  className="text-base font-semibold text-navy-900 cursor-pointer"
                 >
                   Set as Default
                 </label>
@@ -157,6 +157,7 @@ export function CreateAccountDrawer({ children }) {
                 id="isDefault"
                 checked={watch("isDefault")}
                 onCheckedChange={(checked) => setValue("isDefault", checked)}
+                className="data-[state=checked]:bg-navy-800"
               />
             </div>
 
@@ -168,7 +169,7 @@ export function CreateAccountDrawer({ children }) {
               </DrawerClose>
               <Button
                 type="submit"
-                className="flex-1"
+                className="flex-1 bg-navy-800 hover:bg-navy-900 transition-colors"
                 disabled={createAccountLoading}
               >
                 {createAccountLoading ? (

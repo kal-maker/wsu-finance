@@ -52,6 +52,7 @@ import { bulkDeleteTransactions } from "@/actions/account";
 import useFetch from "@/hooks/use-fetch";
 import { BarLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
+import { useCurrency } from "@/context/currency-context";
 
 const RECURRING_INTERVALS = {
   DAILY: "Daily",
@@ -70,6 +71,7 @@ export function NoPaginationTransactionTable({ transactions }) {
   const [typeFilter, setTypeFilter] = useState("");
   const [recurringFilter, setRecurringFilter] = useState("");
   const router = useRouter();
+  const { fmt } = useCurrency();
 
   // Memoized filtered and sorted transactions
   const filteredAndSortedTransactions = useMemo(() => {
@@ -177,27 +179,27 @@ export function NoPaginationTransactionTable({ transactions }) {
   return (
     <div className="space-y-4">
       {deleteLoading && (
-        <BarLoader className="mt-4" width={"100%"} color="#9333ea" />
+        <BarLoader className="mt-4" width={"100%"} color="#06B6D4" />
       )}
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-navy-600" />
           <Input
             placeholder="Search transactions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8"
+            className="pl-8 border-cyan-200 focus:ring-cyan-500 focus:border-cyan-500"
           />
         </div>
         <div className="flex gap-2">
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger>
+            <SelectTrigger className="border-cyan-200 focus:ring-cyan-500 focus:border-cyan-500">
               <SelectValue placeholder="All Types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="INCOME">Income</SelectItem>
-              <SelectItem value="EXPENSE">Expense</SelectItem>
+              <SelectItem value="INCOME" className="text-cyan-700">Income</SelectItem>
+              <SelectItem value="EXPENSE" className="text-navy-700">Expense</SelectItem>
             </SelectContent>
           </Select>
 
@@ -207,12 +209,12 @@ export function NoPaginationTransactionTable({ transactions }) {
               setRecurringFilter(value);
             }}
           >
-            <SelectTrigger className="w-[130px]">
+            <SelectTrigger className="w-[130px] border-cyan-200 focus:ring-cyan-500 focus:border-cyan-500">
               <SelectValue placeholder="All Transactions" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="recurring">Recurring Only</SelectItem>
-              <SelectItem value="non-recurring">Non-recurring Only</SelectItem>
+              <SelectItem value="recurring" className="text-navy-700">Recurring Only</SelectItem>
+              <SelectItem value="non-recurring" className="text-navy-700">Non-recurring Only</SelectItem>
             </SelectContent>
           </Select>
 
@@ -223,6 +225,7 @@ export function NoPaginationTransactionTable({ transactions }) {
                 variant="destructive"
                 size="sm"
                 onClick={handleBulkDelete}
+                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800"
               >
                 <Trash className="h-4 w-4 mr-2" />
                 Delete Selected ({selectedIds.length})
@@ -236,6 +239,7 @@ export function NoPaginationTransactionTable({ transactions }) {
               size="icon"
               onClick={handleClearFilters}
               title="Clear filters"
+              className="border-cyan-200 text-navy-700 hover:bg-cyan-50 hover:text-cyan-700"
             >
               <X className="h-4 w-5" />
             </Button>
@@ -244,22 +248,23 @@ export function NoPaginationTransactionTable({ transactions }) {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-md border">
+      <div className="rounded-md border border-cyan-200">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-cyan-50/50 hover:bg-cyan-50">
               <TableHead className="w-[50px]">
                 <Checkbox
                   checked={
                     selectedIds.length ===
-                      filteredAndSortedTransactions.length &&
+                    filteredAndSortedTransactions.length &&
                     filteredAndSortedTransactions.length > 0
                   }
                   onCheckedChange={handleSelectAll}
+                  className="border-cyan-300 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"
                 />
               </TableHead>
               <TableHead
-                className="cursor-pointer"
+                className="cursor-pointer text-navy-700 font-semibold"
                 onClick={() => handleSort("date")}
               >
                 <div className="flex items-center">
@@ -272,9 +277,9 @@ export function NoPaginationTransactionTable({ transactions }) {
                     ))}
                 </div>
               </TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead className="text-navy-700 font-semibold">Description</TableHead>
               <TableHead
-                className="cursor-pointer"
+                className="cursor-pointer text-navy-700 font-semibold"
                 onClick={() => handleSort("category")}
               >
                 <div className="flex items-center">
@@ -288,7 +293,7 @@ export function NoPaginationTransactionTable({ transactions }) {
                 </div>
               </TableHead>
               <TableHead
-                className="cursor-pointer text-right"
+                className="cursor-pointer text-right text-navy-700 font-semibold"
                 onClick={() => handleSort("amount")}
               >
                 <div className="flex items-center justify-end">
@@ -301,8 +306,8 @@ export function NoPaginationTransactionTable({ transactions }) {
                     ))}
                 </div>
               </TableHead>
-              <TableHead>Recurring</TableHead>
-              <TableHead className="w-[50px]" />
+              <TableHead className="text-navy-700 font-semibold">Recurring</TableHead>
+              <TableHead className="w-[50px] text-navy-700 font-semibold" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -310,30 +315,31 @@ export function NoPaginationTransactionTable({ transactions }) {
               <TableRow>
                 <TableCell
                   colSpan={7}
-                  className="text-center text-muted-foreground"
+                  className="text-center text-navy-600 py-8"
                 >
                   No transactions found
                 </TableCell>
               </TableRow>
             ) : (
               filteredAndSortedTransactions.map((transaction) => (
-                <TableRow key={transaction.id}>
+                <TableRow key={transaction.id} className="hover:bg-cyan-50/30">
                   <TableCell>
                     <Checkbox
                       checked={selectedIds.includes(transaction.id)}
                       onCheckedChange={() => handleSelect(transaction.id)}
+                      className="border-cyan-300 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-navy-700">
                     {format(new Date(transaction.date), "PP")}
                   </TableCell>
-                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell className="text-navy-800">{transaction.description}</TableCell>
                   <TableCell className="capitalize">
                     <span
                       style={{
                         background: categoryColors[transaction.category],
                       }}
-                      className="px-2 py-1 rounded text-white text-sm"
+                      className="px-2 py-1 rounded text-white text-sm font-medium"
                     >
                       {transaction.category}
                     </span>
@@ -342,12 +348,12 @@ export function NoPaginationTransactionTable({ transactions }) {
                     className={cn(
                       "text-right font-medium",
                       transaction.type === "EXPENSE"
-                        ? "text-red-500"
-                        : "text-green-500"
+                        ? "text-navy-600"
+                        : "text-cyan-600"
                     )}
                   >
-                    {transaction.type === "EXPENSE" ? "-" : "+"}$
-                    {transaction.amount.toFixed(2)}
+                    {transaction.type === "EXPENSE" ? "-" : "+"}{fmt(transaction.amount)}
+
                   </TableCell>
                   <TableCell>
                     {transaction.isRecurring ? (
@@ -356,18 +362,18 @@ export function NoPaginationTransactionTable({ transactions }) {
                           <TooltipTrigger>
                             <Badge
                               variant="secondary"
-                              className="gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200"
+                              className="gap-1 bg-cyan-100 text-cyan-700 hover:bg-cyan-200 border-cyan-200"
                             >
                               <RefreshCw className="h-3 w-3" />
                               {
                                 RECURRING_INTERVALS[
-                                  transaction.recurringInterval
+                                transaction.recurringInterval
                                 ]
                               }
                             </Badge>
                           </TooltipTrigger>
-                          <TooltipContent>
-                            <div className="text-sm">
+                          <TooltipContent className="bg-white border-cyan-200">
+                            <div className="text-sm text-navy-700">
                               <div className="font-medium">Next Date:</div>
                               <div>
                                 {format(
@@ -380,7 +386,7 @@ export function NoPaginationTransactionTable({ transactions }) {
                         </Tooltip>
                       </TooltipProvider>
                     ) : (
-                      <Badge variant="outline" className="gap-1">
+                      <Badge variant="outline" className="gap-1 border-navy-200 text-navy-600">
                         <Clock className="h-3 w-3" />
                         One-time
                       </Badge>
@@ -389,23 +395,24 @@ export function NoPaginationTransactionTable({ transactions }) {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-cyan-50">
+                          <MoreHorizontal className="h-4 w-4 text-navy-600" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="border-cyan-200">
                         <DropdownMenuItem
                           onClick={() =>
                             router.push(
                               `/transaction/create?edit=${transaction.id}`
                             )
                           }
+                          className="text-navy-700 focus:bg-cyan-50 focus:text-cyan-700"
                         >
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-cyan-200" />
                         <DropdownMenuItem
-                          className="text-destructive"
+                          className="text-red-600 focus:bg-red-50 focus:text-red-700"
                           onClick={() => deleteFn([transaction.id])}
                         >
                           Delete
