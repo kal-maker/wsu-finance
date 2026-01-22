@@ -13,7 +13,7 @@ export default function SessionTimeoutWrapper({ children, timeoutMinutes = 5 }) 
 
     const handleLogout = useCallback(async () => {
         if (isSignedIn) {
-            console.log("🔒 [SESSION] Inactivity timeout reached. Logging out...");
+            console.log("[SESSION] Inactivity timeout reached. Logging out...");
             await signOut();
             toast.info("You have been logged out due to inactivity.", {
                 duration: 5000,
